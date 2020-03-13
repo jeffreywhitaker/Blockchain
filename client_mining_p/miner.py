@@ -91,6 +91,6 @@ if __name__ == '__main__':
         # print the message from the server.
         if data['message'] == 'New Block Forged':
             coins += 1
-            print(data.message + " Coins: " + coins)
+            print(data['message'] + " Coins: " + coins)
         else:
-            print(data.message)
+            print(data['message'])
