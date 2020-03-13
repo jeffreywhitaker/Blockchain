@@ -14,9 +14,10 @@ function App() {
         let temp_chain = (res.data.chain)
         console.log('temp_chain', temp_chain)
         let temp_transactions = temp_chain.flatMap((node) => node.transactions)
-        console.log(temp_transactions)
-        setTransactions(temp_transactions)
-        computeBalance(temp_transactions)
+        let userTransactions = temp_transactions.filter((transaction) => {
+          return transaction.sender === id || transaction.recipient === id
+        })
+        setTransactions(userTransactions)
       })
   }
 
@@ -24,20 +25,21 @@ function App() {
     getChain()
   }, [id])
 
+  useEffect(() => {
+    computeBalance(transactions)
+  }, [transactions])
+
   function computeBalance(transactions) {
-    let userTransactions = transactions.filter((transaction) => {
-      return transaction.sender === id || transaction.recipient === id
-    })
 
     let subtracted = 0
     let added = 0
 
-    for (let i = 0; i < userTransactions.length; i++){
-      if (userTransactions[i].sender === id) {
-        subtracted = subtracted + userTransactions[i].amount
+    for (let i = 0; i < transactions.length; i++){
+      if (transactions[i].sender === id) {
+        subtracted = subtracted + transactions[i].amount
       }
-      if (userTransactions[i].recipient === id) {
-        added = added + userTransactions[i].amount
+      if (transactions[i].recipient === id) {
+        added = added + transactions[i].amount
       }
     }
     let temp_balance = added - subtracted
